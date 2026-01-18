@@ -11,10 +11,8 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Login */}
           <Route path="/login" element={<Login />} />
-
-          {/* Selección de equipo */}
+          
           <Route
             path="/"
             element={
@@ -24,7 +22,6 @@ function App() {
             }
           />
 
-          {/* Dashboard por equipo */}
           <Route
             path="/dashboard/:equipoId"
             element={
