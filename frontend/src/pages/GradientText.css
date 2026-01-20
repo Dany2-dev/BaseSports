@@ -1,0 +1,19 @@
+.animated-gradient-text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease-out;
+  overflow: visible;
+}
+
+.text-content {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  /* Asegura que la fuente gigante no se corte */
+  padding: 0.1em 0; 
+}

@@ -19,6 +19,8 @@ export default function Dashboard() {
   const [periodoActivo, setPeriodoActivo] = useState("TOTAL");
   const [filtroJugador, setFiltroJugador] = useState("");
   const [mostrarTabla, setMostrarTabla] = useState(true);
+  const [eventos, setEventos] = useState([]);
+
 
   // ===== PETICIÓN KPIS =====
   const calcularKpis = async () => {
@@ -30,6 +32,7 @@ export default function Dashboard() {
       setLoading(true);
       const res = await api.post(`/kpis/by-equipo/${equipoId}`, formData);
       setKpis(res.data);
+      await cargarEventos();
     } catch (err) {
       console.error(err);
       alert("Error al calcular KPIs");
@@ -38,10 +41,51 @@ export default function Dashboard() {
     }
   };
 
-  // ===== LÓGICA DE FILTRADO =====
+  const cargarEventos = async () => {
+    try {
+      const res = await api.get(`/stats/by-equipo/${equipoId}`);
+      setEventos(res.data.eventos);
+    } catch (err) {
+      console.error("Error cargando eventos", err);
+    }
+  };
+
+
+  // ===== LÓGICA DE FILTRADO (CORREGIDA) =====
   const resumenActivo = useMemo(() => {
-    return periodoActivo === "TOTAL" ? kpis?.general : kpis?.por_periodo?.[periodoActivo];
+    if (!kpis) return null;
+
+    // TOTAL
+    if (periodoActivo === "TOTAL") {
+      return {
+        eventos: kpis.general.eventos,
+        pases_completados: kpis.general.pases_completados,
+        pct_completado: kpis.general.pct_pase_completado,
+        pct_perdida: kpis.general.pct_pase_perdido,
+        pct_perdidas_totales: kpis.general.pct_perdidas_totales,
+      };
+    }
+
+    // 1T / 2T
+    const p = kpis.por_periodo?.[periodoActivo];
+    if (!p) return null;
+
+    return {
+      eventos: p.eventos,
+      pases_completados: p.pases, // 👈 AQUÍ ESTABA EL ERROR
+      pct_completado: p.pct_completado,
+      pct_perdida: p.pct_perdida,
+      pct_perdidas_totales: p.pct_perdida,
+    };
   }, [kpis, periodoActivo]);
+
+  const eventosFiltrados = useMemo(() => {
+    if (!eventos.length) return [];
+
+    if (periodoActivo === "TOTAL") return eventos;
+
+    return eventos.filter(e => e.periodo === periodoActivo);
+  }, [eventos, periodoActivo]);
 
   const jugadoresFiltrados = useMemo(() => {
     if (!kpis?.por_jugador) return [];
@@ -116,21 +160,33 @@ export default function Dashboard() {
           </nav>
 
           {/* ===== MÉTRICAS CLAVE ===== */}
-          <section className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <Card label="Eventos" value={resumenActivo?.eventos ?? 0} />
-            <Card label="Goles" value={resumenActivo?.goles ?? 0} />
-            <Card label="xG Generado" value={resumenActivo?.xg?.toFixed(2) ?? 0} />
-            <Card 
-              label="% Pases" 
-              value={`${resumenActivo?.porcentaje_pases?.toFixed(1) ?? 0}%`} 
-              highlight 
-            />
-            <Card 
-              label="% Pérdidas" 
-              value={`${resumenActivo?.porcentaje_perdidas?.toFixed(1) ?? 0}%`} 
-              isNegative 
-            />
-          </section>
+        <section className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+          <Card label="Eventos" value={resumenActivo?.eventos ?? 0} />
+
+          <Card
+            label="Pases completados"
+            value={resumenActivo?.pases_completados ?? 0}
+          />
+
+          <Card
+            label="% Pases completados"
+            value={`${resumenActivo?.pct_completado?.toFixed(1) ?? 0}%`}
+            highlight
+          />
+
+          <Card
+            label="% Pases perdidos"
+            value={`${resumenActivo?.pct_perdida?.toFixed(1) ?? 0}%`}
+            isNegative
+          />
+
+          <Card
+            label="% Pérdidas totales"
+            value={`${resumenActivo?.pct_perdidas_totales?.toFixed(1) ?? 0}%`}
+            isNegative
+          />
+        </section>
+
 
           {/* ===== VISUALIZACIÓN DEL CAMPO ===== */}
           <section className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
@@ -140,7 +196,7 @@ export default function Dashboard() {
             </div>
             <div className="rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 min-h-[400px]">
               <Pitch 
-                eventos={kpis?.eventos || []}  
+                eventos={eventosFiltrados}  
                 periodo={periodoActivo} 
                 jugadorId={filtroJugador} 
               />

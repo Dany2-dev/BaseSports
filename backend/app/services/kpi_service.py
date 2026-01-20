@@ -70,7 +70,6 @@ def calcular_kpis(df):
     df_sin_1t = df[~df.index.isin(df_1t.index)]
   
 
-    print(df_sin_1t[["periodo", event_col]].value_counts())
     # =======================
     # DEFINICIONES (ÚNICAS Y CORRECTAS)
     # =======================

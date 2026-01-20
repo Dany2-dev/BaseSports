@@ -1,0 +1,10 @@
+.text-type {
+  display: inline-block;
+  white-space: pre-wrap;
+}
+
+.text-type__cursor {
+  margin-left: 0.1rem;
+  display: inline-block;
+  color: #a855f7; /* Color morado para el cursor */
+}
