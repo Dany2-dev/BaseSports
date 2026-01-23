@@ -1,32 +1,36 @@
 .card-nav-container {
   position: fixed;
-  top: 1.5em;
+  top: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  max-width: 850px;
-  z-index: 100;
+  width: 95%; /* Un poco más ancho para albergar más filtros */
+  max-width: 1200px;
+  z-index: 9999; /* Máxima prioridad sobre modales */
   box-sizing: border-box;
+  pointer-events: none; /* Permite clicks debajo si no se toca un botón */
 }
 
 .card-nav {
-  display: block;
-  height: 60px;
-  background-color: #0f172a;
-  /* Borde morado neón */
-  border: 1px solid #a855f7; 
-  border-radius: 0.75rem;
-  /* Brillo exterior morado */
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), 0 15px 30px rgba(0, 0, 0, 0.5);
+  pointer-events: all;
+  display: flex;
+  flex-direction: column;
+  background: rgba(6, 0, 16, 0.7); /* Fondo ultra traslúcido */
+  backdrop-filter: blur(12px); /* Efecto cristal deportivo */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(168, 85, 247, 0.4); 
+  border-radius: 1.25rem;
+  box-shadow: 
+    0 0 30px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(168, 85, 247, 0.2);
   position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: visible; /* IMPORTANTE: Para que no corte el contenido */
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .card-nav.open {
-  box-shadow: 0 0 35px rgba(168, 85, 247, 0.6);
+  background: rgba(6, 0, 16, 0.95);
+  box-shadow: 0 0 50px rgba(168, 85, 247, 0.4);
 }
-
 .card-nav-top {
   position: absolute;
   top: 0; left: 0; right: 0;

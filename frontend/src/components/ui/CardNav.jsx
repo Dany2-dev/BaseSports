@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { Link } from 'react-router-dom';
 import { GoArrowUpRight } from 'react-icons/go';
@@ -7,9 +7,9 @@ import './CardNav.css';
 const CardNav = ({
   logo,
   logoAlt = 'Logo',
-  items,
+  items = [],
   className = '',
-  ease = 'power3.out',
+  ease = 'expo.out',
   baseColor = '#fff',
   menuColor,
   buttonBgColor,
@@ -19,16 +19,17 @@ const CardNav = ({
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  
   const navRef = useRef(null);
   const cardsRef = useRef([]);
   const tlRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // --- LÓGICA DE SUBIDA DE ARCHIVOS (FETCH CORREGIDO A PUERTO 8000) ---
-  const handleButtonClick = (e) => {
+  // --- LÓGICA DE SUBIDA DE ARCHIVOS ---
+  const handleButtonClick = useCallback((e) => {
     e.preventDefault();
-    if (fileInputRef.current) fileInputRef.current.click();
-  };
+    fileInputRef.current?.click();
+  }, []);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -39,7 +40,6 @@ const CardNav = ({
 
     setIsUploading(true);
     try {
-      // Usamos el puerto 8000 que indica tu VITE_API_URL
       const response = await fetch('http://127.0.0.1:8000/api/stats/upload', {
         method: 'POST',
         body: formData,
@@ -54,16 +54,15 @@ const CardNav = ({
       }
     } catch (error) {
       console.error('Error de conexión:', error);
-      alert('No se pudo conectar con el servidor (Python). Asegúrate de que el puerto 8000 esté activo.');
+      alert('No se pudo conectar con el servidor (Python).');
     } finally {
       setIsUploading(false);
-      // Limpiamos el input para permitir subir el mismo archivo otra vez si falla
-      event.target.value = '';
+      event.target.value = ''; // Reset para permitir subir el mismo archivo
     }
   };
 
-  // --- LÓGICA DE ANIMACIÓN (GSAP) ---
-  const calculateHeight = () => {
+  // --- LÓGICA DE ANIMACIÓN ---
+  const calculateHeight = useCallback(() => {
     const navEl = navRef.current;
     if (!navEl) return 260;
 
@@ -71,103 +70,86 @@ const CardNav = ({
     if (isMobile) {
       const contentEl = navEl.querySelector('.card-nav-content');
       if (contentEl) {
-        const wasVisible = contentEl.style.visibility;
-        contentEl.style.visibility = 'visible';
-        contentEl.style.position = 'static';
-        contentEl.style.height = 'auto';
-
+        // Clonar temporalmente para medir sin saltos visuales
         const topBar = 60;
-        const padding = 16;
+        const padding = 24;
         const contentHeight = contentEl.scrollHeight;
-
-        contentEl.style.visibility = wasVisible;
-        contentEl.style.position = 'absolute';
-
         return topBar + contentHeight + padding;
       }
     }
     return 260;
-  };
+  }, []);
 
-  const createTimeline = () => {
+  const createTimeline = useCallback(() => {
     const navEl = navRef.current;
-    if (!navEl) return null;
+    if (!navEl || cardsRef.current.length === 0) return null;
+
+    // Limpieza de instancia previa
+    if (tlRef.current) tlRef.current.kill();
 
     gsap.set(navEl, { height: 60, overflow: 'hidden' });
-    gsap.set(cardsRef.current, { y: 50, opacity: 0 });
+    gsap.set(cardsRef.current, { y: 30, opacity: 0, scale: 0.98 });
 
-    const tl = gsap.timeline({ paused: true });
+    const tl = gsap.timeline({ 
+      paused: true, 
+      defaults: { ease, duration: 0.5 } 
+    });
 
     tl.to(navEl, {
       height: calculateHeight,
-      duration: 0.4,
-      ease
-    });
-
-    tl.to(cardsRef.current, { 
+      duration: 0.6,
+    })
+    .to(cardsRef.current, { 
       y: 0, 
       opacity: 1, 
-      duration: 0.4, 
-      ease, 
-      stagger: 0.08 
-    }, '-=0.1');
+      scale: 1,
+      stagger: 0.05 
+    }, '-=0.4'); // Overlap optimizado
 
     return tl;
-  };
+  }, [calculateHeight, ease]);
 
   useLayoutEffect(() => {
-    const tl = createTimeline();
-    tlRef.current = tl;
-
+    tlRef.current = createTimeline();
     return () => {
-      tl?.kill();
-      tlRef.current = null;
+      if (tlRef.current) tlRef.current.kill();
     };
-  }, [ease, items]);
+  }, [createTimeline, items]);
 
   useLayoutEffect(() => {
     const handleResize = () => {
       if (!tlRef.current) return;
-
+      
       if (isExpanded) {
-        const newHeight = calculateHeight();
-        gsap.set(navRef.current, { height: newHeight });
-
-        tlRef.current.kill();
-        const newTl = createTimeline();
-        if (newTl) {
-          newTl.progress(1);
-          tlRef.current = newTl;
-        }
-      } else {
-        tlRef.current.kill();
-        const newTl = createTimeline();
-        if (newTl) {
-          tlRef.current = newTl;
-        }
+        gsap.to(navRef.current, { 
+          height: calculateHeight(), 
+          duration: 0.3, 
+          ease: 'power2.out' 
+        });
       }
+      // Re-inicializar timeline para nuevos valores de altura
+      tlRef.current = createTimeline();
+      if (isExpanded) tlRef.current.progress(1);
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isExpanded]);
+  }, [isExpanded, calculateHeight, createTimeline]);
 
   const toggleMenu = () => {
     const tl = tlRef.current;
-    if (!tl) return;
+    if (!tl || tl.isActive()) return; // Evitar spam de clics
+
     if (!isExpanded) {
       setIsHamburgerOpen(true);
       setIsExpanded(true);
-      tl.play(0);
+      tl.play();
     } else {
       setIsHamburgerOpen(false);
-      tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
-      tl.reverse();
+      tl.reverse().eventCallback('onReverseComplete', () => {
+        setIsExpanded(false);
+      });
     }
-  };
-
-  const setCardRef = i => el => {
-    if (el) cardsRef.current[i] = el;
   };
 
   return (
@@ -177,8 +159,6 @@ const CardNav = ({
         className={`card-nav ${isExpanded ? 'open' : ''}`} 
         style={{ backgroundColor: baseColor }}
       >
-        
-        {/* INPUT DE ARCHIVO OCULTO */}
         <input 
           type="file" 
           ref={fileInputRef} 
@@ -186,14 +166,16 @@ const CardNav = ({
           onChange={handleFileChange}
           accept=".csv, .xlsx, .json"
         />
-
+        
         <div className="card-nav-top">
           <div
             className={`hamburger-menu ${isHamburgerOpen ? 'open' : ''}`}
             onClick={toggleMenu}
             role="button"
-            aria-label={isExpanded ? 'Close menu' : 'Open menu'}
+            aria-label={isExpanded ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={isExpanded}
             tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && toggleMenu()}
             style={{ color: menuColor || '#000' }}
           >
             <div className="hamburger-line" />
@@ -201,7 +183,9 @@ const CardNav = ({
           </div>
 
           <div className="logo-container">
-            <img src={logo} alt={logoAlt} className="logo" />
+            <Link to="/">
+              <img src={logo} alt={logoAlt} className="logo" />
+            </Link>
           </div>
 
           <button
@@ -211,19 +195,24 @@ const CardNav = ({
             disabled={isUploading}
             style={{ 
               backgroundColor: isUploading ? '#ccc' : buttonBgColor, 
-              color: buttonTextColor 
+              color: buttonTextColor,
+              cursor: isUploading ? 'not-allowed' : 'pointer'
             }}
           >
             {isUploading ? 'CARGANDO...' : 'SUBIR ARCHIVO'}
           </button>
         </div>
 
-        <div className="card-nav-content" aria-hidden={!isExpanded}>
-          {(items || []).slice(0, 3).map((item, idx) => (
+        <div 
+          className="card-nav-content" 
+          style={{ visibility: isExpanded ? 'visible' : 'hidden' }}
+          aria-hidden={!isExpanded}
+        >
+          {items.slice(0, 3).map((item, idx) => (
             <div
-              key={`${item.label}-${idx}`}
+              key={`nav-card-${idx}`}
               className="nav-card"
-              ref={setCardRef(idx)}
+              ref={el => cardsRef.current[idx] = el}
               style={{ 
                 backgroundColor: item.bgColor, 
                 color: item.textColor 
@@ -233,15 +222,12 @@ const CardNav = ({
               <div className="nav-card-links">
                 {item.links?.map((lnk, i) => (
                   <Link 
-                    key={`${lnk.label}-${i}`} 
+                    key={`link-${idx}-${i}`} 
                     className="nav-card-link" 
                     to={lnk.path || '/'} 
                     onClick={toggleMenu}
                   >
-                    <GoArrowUpRight 
-                      className="nav-card-link-icon" 
-                      aria-hidden="true" 
-                    />
+                    <GoArrowUpRight className="nav-card-link-icon" />
                     {lnk.label}
                   </Link>
                 ))}

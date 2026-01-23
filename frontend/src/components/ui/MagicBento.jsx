@@ -1,185 +1,62 @@
-import { useRef, useEffect, useCallback, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import './MagicBento.css';
 
 import PlayerStatsTable from "../tables/PlayerStatsTable";
 import CombinedPassesCharts from "../charts/CombinedPassesCharts";
+import ComparativeLossesChart from "../charts/ComparativeLossesChart";
+import ProgressivePassesMagic from "../charts/ProgressivePassesMagic";
+import MagicHeatmap from "../charts/MagicHeatmap";
+import EventFilterNav from "../ui/EventFilterNav";
 
-/**
- * CONFIGURACIÓN Y CONSTANTES DEL COMPONENTE
- */
-const DEFAULT_PARTICLE_COUNT = 15;
-const DEFAULT_SPOTLIGHT_RADIUS = 350;
-const DEFAULT_GLOW_COLOR = '132, 0, 255';
 const MOBILE_BREAKPOINT = 768;
 
-/**
- * DATA DE LAS TARJETAS (BENTO GRID)
- */
 const cardData = [
-  {
-    color: '#060010',
-    title: 'HEATMAP',
-    description: 'Track user behavior and patterns',
-    label: 'Tactical',
-    details: 'Análisis profundo de métricas de rendimiento y duelos aéreos por partido.'
-  },
-  {
-    color: '#060010',
-    title: 'LOSTS',
-    description: 'Centralized data view for teams',
-    label: 'Performance',
-    details: 'Análisis combinado de pases, pases filtrados y duelos aéreos.'
-  },
-  {
-    color: '#060010',
-    title: 'PROGRESIVE PASS',
-    description: 'Work together seamlessly in cloud',
-    label: 'Analysis',
-    details: 'Progresión y ruptura de líneas.'
-  },
-  {
-    color: '#060010',
-    title: 'PLAYER STATS',
-    description: 'Estadísticas del partido x Jugador',
-    label: 'Efficiency',
-    details: 'Rendimiento individual detallado.'
-  },
-  {
-    color: '#060010',
-    title: 'xG',
-    description: 'Connect your favorite soccer tools',
-    label: 'Connectivity',
-    details: 'Expected goals.'
-  },
-  {
-    color: '#060010',
-    title: 'COMPARATIVE',
-    description: 'Enterprise-grade data protection',
-    label: 'Protection',
-    details: 'Comparativas avanzadas.'
-  }
+  { title: 'HEATMAP', description: 'Track user behavior and patterns', label: 'Tactical', details: 'Análisis profundo de métricas de rendimiento.' },
+  { title: 'Balance de Ganadas y Pérdidas', description: 'Vista centralizada de rendimiento individual', label: 'Performance', details: 'Análisis navegable de pases y duelos.' },
+  { title: 'PROGRESIVE PASS', description: 'Work together seamlessly in cloud', label: 'Analysis', details: 'Progresión y ruptura de líneas.' },
+  { title: 'REGISTRO DE EVENTOS POR JUGADOR', description: 'Desglose detallado de cada acción', label: 'Eficiencia', details: 'Base de datos completa de eventos.' },
+  { title: 'xG', description: 'Connect your favorite soccer tools', label: 'Connectivity', details: 'Expected goals.' },
+  { title: 'COMPARATIVA DE RENDIMIENTO', description: 'Análisis detallado de acciones', label: 'Estadísticas', details: 'Visualización interactiva de balance.' }
 ];
 
-/**
- * UTILIDADES DE PARTÍCULAS
- */
-const createParticleElement = (x, y, color = DEFAULT_GLOW_COLOR) => {
-  const el = document.createElement('div');
-  el.className = 'particle';
-  el.style.cssText = `
-    position:absolute;
-    width:4px;
-    height:4px;
-    border-radius:50%;
-    background:rgba(${color},1);
-    box-shadow:0 0 12px rgba(${color},0.9);
-    pointer-events:none;
-    z-index:100;
-    left:${x}px;
-    top:${y}px;
-  `;
-  return el;
-};
-
-const updateSpotlight = (element, e, radius) => {
-  const rect = element.getBoundingClientRect();
-  element.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-  element.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-  element.style.setProperty('--spotlight-radius', `${radius}px`);
-};
-
-/**
- * TARJETA INDIVIDUAL
- */
-const ParticleCard = ({
-  children,
-  className,
-  onClick,
-  isExpanded,
-  disableAnimations,
-  enableTilt,
-  enableMagnetism,
-  glowColor,
-  spotlightRadius
-}) => {
+const ParticleCard = ({ children, className, onClick, isExpanded, disableAnimations }) => {
   const cardRef = useRef(null);
-  const particles = useRef([]);
-  const isHovered = useRef(false);
+  useEffect(() => {
+    if (disableAnimations || !cardRef.current || isExpanded) return;
+    const el = cardRef.current;
+    const move = e => {
+      const rect = el.getBoundingClientRect();
+      el.style.setProperty('--glow-x', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+      el.style.setProperty('--glow-y', `${((e.clientY - rect.top) / rect.height) * 100}%`);
+      el.style.setProperty('--glow-intensity', '1');
+    };
+    const leave = () => el.style.setProperty('--glow-intensity', '0');
+    el.addEventListener('mousemove', move);
+    el.addEventListener('mouseleave', leave);
+    return () => { el.removeEventListener('mousemove', move); el.removeEventListener('mouseleave', leave); };
+  }, [disableAnimations, isExpanded]);
+  return <div ref={cardRef} onClick={onClick} className={className}>{children}</div>;
+};
 
-  const clearParticles = () => {
-    particles.current.forEach(p => p.remove());
-    particles.current = [];
-  };
+const MagicBento = ({ equipoId, initialData }) => {
+  const [activeCardIndex, setActiveCardIndex] = useState(null);
+  const [activeEventTypes, setActiveEventTypes] = useState([]);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT;
 
   useEffect(() => {
-    if (disableAnimations || !cardRef.current) return;
-    const el = cardRef.current;
+    const handleEsc = (e) => { if (e.key === 'Escape') setActiveCardIndex(null); };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
 
-    const enter = () => {
-      if (isExpanded) return;
-      isHovered.current = true;
-    };
-
-    const leave = () => {
-      isHovered.current = false;
-      clearParticles();
-      gsap.to(el, { rotateX: 0, rotateY: 0, x: 0, y: 0, duration: 0.6 });
-    };
-
-    const move = e => {
-      if (isExpanded) return;
-      updateSpotlight(el, e, spotlightRadius);
-
-      if (enableTilt) {
-        const r = el.getBoundingClientRect();
-        const x = e.clientX - r.left - r.width / 2;
-        const y = e.clientY - r.top - r.height / 2;
-        gsap.to(el, { rotateX: -y / 20, rotateY: x / 20, duration: 0.3 });
-      }
-    };
-
-    el.addEventListener('mouseenter', enter);
-    el.addEventListener('mouseleave', leave);
-    el.addEventListener('mousemove', move);
-
-    return () => {
-      el.removeEventListener('mouseenter', enter);
-      el.removeEventListener('mouseleave', leave);
-      el.removeEventListener('mousemove', move);
-      clearParticles();
-    };
-  }, [disableAnimations, isExpanded, enableTilt, enableMagnetism, glowColor, spotlightRadius]);
-
-  return (
-    <div
-      ref={cardRef}
-      onClick={onClick}
-      className={`${className} ${isExpanded ? 'is-expanded' : ''}`}
-    >
-      {children}
-    </div>
-  );
-};
-
-/**
- * MAGIC BENTO
- */
-const MagicBento = ({ equipoId, initialData, ...props }) => {
-  const [activeCardIndex, setActiveCardIndex] = useState(null);
-  const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-  const disableFx = props.disableAnimations || isMobile;
-
-  const close = e => {
-    e.stopPropagation();
-    setActiveCardIndex(null);
-  };
+  const close = e => { if (e) e.stopPropagation(); setActiveCardIndex(null); };
 
   return (
     <div className="bento-wrapper">
       {activeCardIndex !== null && <div className="bento-overlay" onClick={close} />}
 
-      <div className="card-grid bento-section">
+      <div className="card-grid">
         {cardData.map((card, index) => {
           const isExpanded = index === activeCardIndex;
           const isHidden = activeCardIndex !== null && !isExpanded;
@@ -187,38 +64,64 @@ const MagicBento = ({ equipoId, initialData, ...props }) => {
           return (
             <ParticleCard
               key={index}
-              className={`magic-bento-card ${isHidden ? 'magic-bento-card--hidden' : ''}`}
               isExpanded={isExpanded}
+              className={`magic-bento-card ${isExpanded ? 'is-expanded' : ''} ${isHidden ? 'magic-bento-card--hidden' : ''} magic-bento-card--border-glow cursor-target`}
               onClick={() => !isExpanded && setActiveCardIndex(index)}
-              disableAnimations={disableFx}
-              enableTilt={props.enableTilt}
-              enableMagnetism={props.enableMagnetism}
-              glowColor={props.glowColor || DEFAULT_GLOW_COLOR}
-              spotlightRadius={props.spotlightRadius || DEFAULT_SPOTLIGHT_RADIUS}
+              disableAnimations={isMobile}
             >
               {isExpanded && (
-                <button className="magic-bento-card__close" onClick={close}>×</button>
+                <button className="magic-bento-card__close" onClick={close}>&times;</button>
               )}
 
               <div className="magic-bento-card__content">
-                <span className="magic-bento-card__label">{card.label}</span>
-                <h2 className="magic-bento-card__title">{card.title}</h2>
-                <p className="magic-bento-card__description">{card.description}</p>
+                <header className={isExpanded ? "card-header-expanded" : ""}>
+                  <span className="magic-bento-card__label">{card.label}</span>
+                  <h2 className="magic-bento-card__title">{card.title}</h2>
+                  <p className="magic-bento-card__description">{card.description}</p>
+                </header>
 
                 {isExpanded && (
-                  <div className="magic-bento-card__extended-info">
-                    <div className="separator" />
-                    <p className="details-text">{card.details}</p>
+                  <div className="magic-bento-card__body">
+                    <div className="inner-visualizer">
+                      {card.title === "HEATMAP" && (
+                        <div className="chart-container-expanded">
+                          <EventFilterNav onChange={setActiveEventTypes} />
+                          <MagicHeatmap initialData={initialData} activeEventTypes={activeEventTypes} />
+                        </div>
+                      )}
+                      {card.title === "PROGRESIVE PASS" && (
+                        <div className="chart-container-expanded">
+                          <ProgressivePassesMagic initialData={initialData} />
+                        </div>
+                      )}
+                      {card.title === "Balance de Ganadas y Pérdidas" && (
+                        <div className="chart-container-expanded">
+                          <CombinedPassesCharts initialData={initialData} />
+                        </div>
+                      )}
+                      {card.title === "REGISTRO DE EVENTOS POR JUGADOR" && (
+                        <div className="table-container-expanded">
+                          <PlayerStatsTable equipoId={equipoId} preloadedData={initialData} />
+                        </div>
+                      )}
+                      {card.title === "COMPARATIVA DE RENDIMIENTO" && (
+                        <div className="chart-container-expanded">
+                          <ComparativeLossesChart initialData={initialData} />
+                        </div>
+                      )}
+                      {card.title === "xG" && (
+                        <div className="xg-placeholder-full">
+                          <div className="glow-icon">⚽</div>
+                          <p>Módulo de Probabilidad de Gol en Desarrollo</p>
+                        </div>
+                      )}
+                    </div>
 
-                    {card.title === "LOSTS" && (
-                      <div style={{ marginTop: '2.5rem' }}>
-                        <CombinedPassesCharts initialData={initialData} />
-                      </div>
-                    )}
-
-                    {card.title === "PLAYER STATS" && (
-                      <PlayerStatsTable equipoId={equipoId} preloadedData={initialData} />
-                    )}
+                    <footer className="card-footer-expanded">
+                      <div className="separator" />
+                      <p className="details-text">{card.details}</p>
+                      <div style={{ height: '40px' }} />
+                    </footer>
                   </div>
                 )}
               </div>

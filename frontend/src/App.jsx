@@ -16,14 +16,14 @@ function AppLayout() {
 
   return (
     <>
-      {/* Menú lateral (se conserva) */}
+      {/* MENÚ CORREGIDO PARA VISIBILIDAD */}
       {!hideMenu && (
         <StaggeredMenu
           position="left"
           isFixed={true}
-          accentColor="#3b82f6"          // azul profesional dark
-          menuButtonColor="#0f172a"      // slate-900
-          openMenuButtonColor="#3b82f6"
+          accentColor="#a855f7"          // Morado neón para que combine con tus cards
+          menuButtonColor="#ffffff"       // BLANCO PURO: Ahora sí se verá claro
+          openMenuButtonColor="#a855f7"   // Cambia a morado al abrir
           items={[
             { label: "Inicio", ariaLabel: "Inicio", link: "/" },
             { label: "Teams", ariaLabel: "Teams", link: "/" },
