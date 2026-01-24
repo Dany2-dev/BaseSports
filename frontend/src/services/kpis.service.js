@@ -1,11 +1,12 @@
 export async function getKpisByEquipo(equipoId) {
   const res = await fetch(
-    `http://127.0.0.1:8000/api/stats/by-equipo/${equipoId}`,
+    `${import.meta.env.VITE_API_URL}/stats/by-equipo/${equipoId}`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include", // ← importante si usas sesiones/cookies
     }
   );
 

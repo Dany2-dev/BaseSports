@@ -9,4 +9,4 @@ uvicorn
 itsdangerous
 python-multipart
 httpx
-
+openpyxl

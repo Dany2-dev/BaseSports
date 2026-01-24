@@ -1,8 +1,27 @@
+/* ==========================================================================
+   STAGGERED MENU & DASHBOARD FIXES
+   ========================================================================== */
+
+/* 1. RESET DE INTERACTIVIDAD GLOBAL PARA ELEMENTOS DE FORMULARIO */
+input, 
+select, 
+button,
+textarea,
+.sm-toggle,
+.sm-panel-item,
+.sm-socials-link {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+/* 2. WRAPPERS PRINCIPALES */
 .staggered-menu-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
   z-index: 40;
+  /* El 'none' permite que el contenido debajo del wrapper sea clicable,
+     siempre y cuando los hijos que necesiten interactuar tengan 'auto' */
   pointer-events: none;
 }
 
@@ -16,6 +35,7 @@
   overflow: hidden;
 }
 
+/* 3. HEADER & LOGO */
 .staggered-menu-header {
   position: absolute;
   top: 0;
@@ -26,12 +46,12 @@
   justify-content: space-between;
   padding: 2em;
   background: transparent;
-  pointer-events: none;
+  pointer-events: none; /* No bloquea el contenido de la tabla/dashboard */
   z-index: 20;
 }
 
 .staggered-menu-header > * {
-  pointer-events: auto;
+  pointer-events: auto !important;
 }
 
 .sm-logo {
@@ -49,6 +69,7 @@
   object-fit: contain;
 }
 
+/* 4. BOTÓN TOGGLE (MENÚ) */
 .sm-toggle {
   position: relative;
   display: inline-flex;
@@ -56,23 +77,17 @@
   gap: 0.3rem;
   background: transparent;
   border: none;
-  cursor: pointer;
   color: #e9e9ef;
   font-weight: 500;
   line-height: 1;
   overflow: visible;
   margin-top: -60px;
-  pointer-events: auto;
 }
 
 .sm-toggle:focus-visible {
   outline: 2px solid #8400ffaa;
   outline-offset: 4px;
   border-radius: 4px;
-}
-
-.sm-line:last-of-type {
-  margin-top: 6px;
 }
 
 .sm-toggle-textWrap {
@@ -108,12 +123,6 @@
   will-change: transform;
 }
 
-.sm-panel-itemWrap {
-  position: relative;
-  overflow: hidden;
-  line-height: 1;
-}
-
 .sm-icon-line {
   position: absolute;
   left: 50%;
@@ -130,13 +139,13 @@
   display: none !important;
 }
 
+/* 5. PANEL LATERAL (MENÚ ABIERTO) */
 .staggered-menu-panel {
   position: absolute;
   top: 0;
   right: 0;
   width: clamp(240px, 25vw, 320px);
   height: 100%;
-  /* CAMBIO A COLORES DE TU DASHBOARD */
   background: #060010; 
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -146,7 +155,7 @@
   padding: 6em 2em 2em 2em;
   overflow-y: auto;
   z-index: 10;
-  pointer-events: auto;
+  pointer-events: auto; /* Permite interactuar con los links del menú */
 }
 
 [data-position='left'] .staggered-menu-panel {
@@ -156,6 +165,7 @@
   border-right: 1px solid rgba(132, 0, 255, 0.2);
 }
 
+/* 6. CAPAS ANIMADAS (PRELAYERS) */
 .sm-prelayers {
   position: absolute;
   top: 0;
@@ -178,80 +188,16 @@
   height: 100%;
   width: 100%;
   transform: translateX(0);
-  background: #8400ff; /* Color morado de tu bento */
+  background: #8400ff;
 }
 
+/* 7. CONTENIDO DEL PANEL */
 .sm-panel-inner {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-}
-
-.sm-socials {
-  margin-top: auto;
-  padding-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.sm-socials-title {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #8400ff; /* Acento morado */
-}
-
-.sm-socials-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.sm-socials-list .sm-socials-link {
-  opacity: 1;
-}
-
-.sm-socials-list:hover .sm-socials-link {
-  opacity: 0.35;
-}
-
-.sm-socials-list:hover .sm-socials-link:hover {
-  opacity: 1;
-}
-
-.sm-socials-link:focus-visible {
-  outline: 2px solid #8400ff;
-  outline-offset: 3px;
-}
-
-.sm-socials-list:focus-within .sm-socials-link {
-  opacity: 0.35;
-}
-
-.sm-socials-list:focus-within .sm-socials-link:focus-visible {
-  opacity: 1;
-}
-
-.sm-socials-link {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #e9e9ef; /* Texto claro sobre fondo oscuro */
-  text-decoration: none;
-  position: relative;
-  padding: 2px 0;
-  display: inline-block;
-  transition: color 0.3s ease, opacity 0.3s ease;
-}
-
-.sm-socials-link:hover {
-  color: #8400ff;
+  pointer-events: auto;
 }
 
 .sm-panel-title {
@@ -273,45 +219,26 @@
 
 .sm-panel-item {
   position: relative;
-  color: #fff; /* Texto blanco */
+  color: #fff;
   font-weight: 600;
   font-size: 2.5rem;
-  cursor: pointer;
   line-height: 1;
   letter-spacing: -1px;
   text-transform: uppercase;
-  transition: background 0.25s, color 0.25s;
+  transition: color 0.25s;
   display: inline-block;
   text-decoration: none;
   padding-right: 1.1em;
 }
 
-.staggered-menu-panel .sm-socials-list .sm-socials-link {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-.staggered-menu-panel .sm-socials-list:hover .sm-socials-link:not(:hover) {
-  opacity: 0.35;
-}
-
-.staggered-menu-panel .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) {
-  opacity: 0.35;
-}
-
-.staggered-menu-panel .sm-socials-list .sm-socials-link:hover,
-.staggered-menu-panel .sm-socials-list .sm-socials-link:focus-visible {
-  opacity: 1;
+.sm-panel-item:hover {
+  color: #8400ff;
 }
 
 .sm-panel-itemLabel {
   display: inline-block;
   will-change: transform;
   transform-origin: 50% 100%;
-}
-
-.sm-panel-item:hover {
-  color: #8400ff; /* Cambio a tu morado al hacer hover */
 }
 
 .sm-panel-list[data-numbering] {
@@ -326,22 +253,64 @@
   right: 0.5em;
   font-size: 14px;
   font-weight: 400;
-  color: #3b82f6; /* Azul neón de tu dashboard */
+  color: #3b82f6; 
   letter-spacing: 0;
   pointer-events: none;
   user-select: none;
   opacity: var(--sm-num-opacity, 1);
 }
 
+/* 8. SOCIALS */
+.sm-socials {
+  margin-top: auto;
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sm-socials-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #8400ff;
+}
+
+.sm-socials-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sm-socials-link {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #e9e9ef;
+  text-decoration: none;
+  position: relative;
+  padding: 2px 0;
+  display: inline-block;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.sm-socials-list:hover .sm-socials-link:not(:hover) {
+  opacity: 0.35;
+}
+
+.sm-socials-link:hover {
+  color: #8400ff;
+  opacity: 1 !important;
+}
+
+/* 9. MEDIA QUERIES */
 @media (max-width: 1024px) {
   .staggered-menu-panel {
     width: 300px;
-    left: 0;
-    right: 0;
-  }
-
-  .staggered-menu-wrapper[data-open] .sm-logo-img {
-    filter: none; /* Quitamos el invert para que el logo se vea original */
   }
 }
 
@@ -353,6 +322,7 @@
   }
 }
 
+/* 10. ESTADOS FINALES */
 .staggered-menu-wrapper[data-open] .sm-logo {
   opacity: 0;
   pointer-events: none;

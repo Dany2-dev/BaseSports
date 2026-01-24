@@ -5,6 +5,7 @@ import RequireAuth from "./auth/RequireAuth";
 import Login from "./pages/Login";
 import SelectEquipo from "./pages/SelectEquipo";
 import Dashboard from "./pages/Dashboard";
+import Players from "./pages/Players";
 
 import StaggeredMenu from "./components/ui/StaggeredMenu";
 
@@ -16,14 +17,13 @@ function AppLayout() {
 
   return (
     <>
-      {/* MENÚ CORREGIDO PARA VISIBILIDAD */}
       {!hideMenu && (
         <StaggeredMenu
           position="left"
           isFixed={true}
-          accentColor="#a855f7"          // Morado neón para que combine con tus cards
-          menuButtonColor="#ffffff"       // BLANCO PURO: Ahora sí se verá claro
-          openMenuButtonColor="#a855f7"   // Cambia a morado al abrir
+          accentColor="#a855f7"
+          menuButtonColor="#ffffff"
+          openMenuButtonColor="#a855f7"
           items={[
             { label: "Inicio", ariaLabel: "Inicio", link: "/" },
             { label: "Teams", ariaLabel: "Teams", link: "/" },
@@ -35,7 +35,6 @@ function AppLayout() {
         />
       )}
 
-      {/* Contenido principal */}
       <div className="min-h-screen bg-slate-900 text-slate-200">
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -45,6 +44,15 @@ function AppLayout() {
             element={
               <RequireAuth>
                 <SelectEquipo />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="/players"
+            element={
+              <RequireAuth>
+                <Players />
               </RequireAuth>
             }
           />

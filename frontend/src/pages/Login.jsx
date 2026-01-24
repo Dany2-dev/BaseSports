@@ -9,7 +9,7 @@ import GradientText from "./GradientText";
 import "./LoginPanel.css";
 
 export default function Login() {
-  const { user, loading, loginWithGoogle } = useAuth();
+  const { user, loading, loginWithGoogle, loginAnonymously } = useAuth();
   const [active, setActive] = useState(false);
 
   if (loading) return null;
@@ -60,6 +60,15 @@ export default function Login() {
 
               <button type="button" onClick={loginWithGoogle}>
                 Sign In with Google
+              </button>
+
+              {/* 👤 LOGIN ANÓNIMO (AÑADIDO) */}
+              <button
+                type="button"
+                onClick={loginAnonymously}
+                className="mt-4 opacity-80 hover:opacity-100"
+              >
+                Enter as Guest
               </button>
             </form>
           </div>

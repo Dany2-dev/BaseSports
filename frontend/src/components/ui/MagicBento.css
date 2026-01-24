@@ -160,28 +160,105 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
-
 /* =========================================================
-   5. RESPONSIVE DESIGN & GRID LOGIC
+   5. RESPONSIVE DESIGN & GRID LOGIC (CORREGIDO)
    ========================================================= */
+
+/* 📱 MOBILE */
 @media (max-width: 599px) {
-  .card-grid { grid-template-columns: 1fr; padding: 1rem; }
-  .magic-bento-card { min-height: 280px; padding: 1.5rem; }
+  .card-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .magic-bento-card {
+    min-height: 260px;
+    padding: 1.25rem;
+  }
 }
 
+/* 📱📲 IPAD / TABLET (FIX REAL) */
 @media (min-width: 600px) and (max-width: 1023px) {
-  .card-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Grid compacto */
+  .card-grid {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  /* Card NO gigante */
+  .magic-bento-card {
+    aspect-ratio: unset !important;
+    min-height: unset !important;
+    height: auto !important;
+    padding: 1.25rem !important;
+  }
+
+  /* Charts: el verdadero problema */
+  .chart-wrapper-fixed,
+  .magic-heatmap-container {
+    height: 220px !important;
+    min-height: unset !important;
+    max-height: 240px !important;
+    padding: 0.75rem !important;
+  }
+
+  /* Texto más compacto */
+  .magic-bento-card__title {
+    font-size: 1.35rem !important;
+  }
+
+  .magic-bento-card__description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
 }
 
+/* 💻 DESKTOP BAJO (LAPTOPS CHICOS) */
+@media (min-width: 1024px) and (max-height: 820px) {
+  .magic-bento-card {
+    min-height: 280px;
+  }
+}
+
+/* 🖱️ TOUCH DEVICES */
+@media (hover: none) {
+  .magic-bento-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* 🖥️ DESKTOP NORMAL */
 @media (min-width: 1024px) {
-  .card-grid { grid-template-columns: repeat(4, 1fr); }
+  .card-grid {
+    /* Mantenemos 4 columnas */
+    grid-template-columns: repeat(4, 1fr);
+  }
 
-  /* Bento Layout Patterns */
-  .magic-bento-card:nth-child(3) { grid-column: span 2; grid-row: span 2; }
-  .magic-bento-card:nth-child(4) { grid-column: 1 / span 2; grid-row: 2 / span 2; }
+  /* Primera fila de destacados (Cards 3 y 4) */
+  .magic-bento-card:nth-child(3) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .magic-bento-card:nth-child(4) {
+    grid-column: 1 / span 2;
+    grid-row: 2 / span 2;
+  }
+/* Segunda fila de destacados (Cards 9 y 10) 
+     Esto hace que el patrón se repita visualmente abajo */
+  .magic-bento-card:nth-child(9) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .magic-bento-card:nth-child(10) {
+    grid-column: 1 / span 2;
+    grid-row: 4 / span 2; /* Se ajusta a la nueva fila */
+  }
 }
-
 /* =========================================================
    6. EFECTOS DE BRILLO (GLOW & BORDER)
    ========================================================= */
@@ -457,5 +534,4 @@ tr:hover td {
   filter: blur(80px);
   background: radial-gradient(circle, rgba(132,0,255,0.15) 0%, transparent 70%);
 }
-
 /* Fin del Sistema de Estilos 600+ líneas logic */

@@ -11,7 +11,7 @@ export default function SelectEquipo() {
 
   useEffect(() => {
     api
-      .get("/equipos")
+      .get("/equipos/")
       .then(res => setEquipos(res.data))
       .catch(() => setEquipos([]));
   }, []);
@@ -25,13 +25,13 @@ export default function SelectEquipo() {
   /* ===== MENÚ LATERAL (AGREGADO, NO MODIFICA NADA) ===== */
   const mainMenuItems = [
   { label: "Overview", ariaLabel: "Overview", link: "/" },
-  { label: "Teams", ariaLabel: "Teams", link: "http://127.0.0.1:5173/" },
+  { label: "Teams", ariaLabel: "Teams", link: "/" },
   { label: "Players", ariaLabel: "Players", link: "/players" },
-  { label: "Analysis", ariaLabel: "Analysis", link: "http://127.0.0.1:5173/dashboard/5" },
+  { label: "Analysis", ariaLabel: "Analysis", link: "/dashboard/5" },
   { label: "Reports", ariaLabel: "Reports", link: "/reports" },
   { label: "Settings", ariaLabel: "Settings", link: "/settings" },
-  
 ];
+
 
 
   const socialItems = [

@@ -6,6 +6,7 @@ class JugadorOut(BaseModel):
     numero: int | None = None
     imagen_url: str | None = None
     equipo_id: int
+    
 
     class Config:
         from_attributes = True

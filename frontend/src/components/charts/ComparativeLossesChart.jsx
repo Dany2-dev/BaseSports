@@ -204,13 +204,13 @@ export default function ComparativeLossesAndWinsChart({ initialData }) {
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-12 py-4">
-      {/* Contenedor de Pérdidas */}
-      <div className="w-full max-w-[950px] bg-black/20 rounded-xl p-4 border border-white/5">
+      {/* Gráfica de Pérdidas */}
+      <div className="w-full max-w-[950px]">
         <div ref={lossesRef} style={{ width: '100%', height: '400px' }} />
       </div>
 
-      {/* Contenedor de Ganadas */}
-      <div className="w-full max-w-[950px] bg-black/20 rounded-xl p-4 border border-white/5">
+      {/* Gráfica de Ganadas */}
+      <div className="w-full max-w-[950px]">
         <div ref={winsRef} style={{ width: '100%', height: '400px' }} />
       </div>
     </div>
