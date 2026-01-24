@@ -12,7 +12,15 @@ export default function Login() {
   const { user, loading, loginWithGoogle, loginAnonymously } = useAuth();
   const [active, setActive] = useState(false);
 
-  if (loading) return null;
+  // ✅ FIX ÚNICO: no devolver null
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black text-white">
+        Loading…
+      </div>
+    );
+  }
+
   if (user) return <Navigate to="/" replace />;
 
   return (
@@ -62,7 +70,7 @@ export default function Login() {
                 Sign In with Google
               </button>
 
-              {/* 👤 LOGIN ANÓNIMO (AÑADIDO) */}
+              {/* 👤 LOGIN ANÓNIMO */}
               <button
                 type="button"
                 onClick={loginAnonymously}

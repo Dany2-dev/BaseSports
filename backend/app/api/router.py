@@ -12,4 +12,4 @@ router.include_router(auth_router)
 router.include_router(files_router)
 router.include_router(equipos_router, prefix="/equipos", tags=["Equipos"])
 router.include_router(stats_router, prefix="/stats", tags=["Stats"])
-router.include_router(kpis_router, prefix="/kpis", tags=["KPIs"])
+router.include_router(kpis_router)  # ✅ CORREGIDO

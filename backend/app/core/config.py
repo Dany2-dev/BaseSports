@@ -7,7 +7,7 @@ load_dotenv()
 # =========================
 # BASE
 # =========================
-BASE_DIR = Path(__file__).resolve().parents[3]  # carpeta datastrike/
+BASE_DIR = Path(__file__).resolve().parents[3]
 
 ENV = os.getenv("ENV", "dev")
 
@@ -37,4 +37,7 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 # =========================
 # FRONTEND
 # =========================
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "https://base-sports-1168.vercel.app" if ENV == "prod" else "http://localhost:5173"
+)

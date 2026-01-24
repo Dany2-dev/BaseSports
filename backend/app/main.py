@@ -8,7 +8,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from app.db.session import engine
 from app.db.base import Base
 from app.api.router import router
-from app.core.config import FRONTEND_URL, SECRET_KEY
+from app.core.config import SECRET_KEY
 
 # Importar modelos (OBLIGATORIO para crear tablas)
 from app.models.equipo import Equipo
@@ -44,13 +44,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
+# 🔑 SessionMiddleware CORRECTO para HTTPS + cookies
 app.add_middleware(
     SessionMiddleware,
     secret_key=SECRET_KEY,
-    same_site="lax",
-    https_only=False
+    same_site="none",   # ✅ FIX
+    https_only=True     # ✅ FIX
 )
 
 # ─────────────────────────────

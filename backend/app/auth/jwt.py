@@ -4,8 +4,11 @@ from app.core.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
 def create_access_token(data: dict):
     to_encode = data.copy()
+
+    now = datetime.utcnow()
     to_encode.update({
-        "iat": datetime.utcnow(),
-        "exp": datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        "iat": int(now.timestamp()),  # ✅ FIX
+        "exp": int((now + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)).timestamp())  # ✅ FIX
     })
+
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

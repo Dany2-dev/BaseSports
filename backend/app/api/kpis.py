@@ -9,7 +9,7 @@ from app.utils.stats_loader import load_stats
 from app.services.stats_service import merge_stats_with_players, filter_stats_by_equipo
 from app.services.kpi_service import calcular_kpis
 
-router = APIRouter()
+router = APIRouter(prefix="/kpis", tags=["kpis"])
 
 # --- FUNCION AUXILIAR PARA PROCESAR ---
 def procesar_datos_kpi(db, equipo_id, df_input=None):

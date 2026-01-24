@@ -7,15 +7,23 @@ export function useKpisEquipo() {
   const [error, setError] = useState(null);
 
   const fetchKpis = async (equipoId, file) => {
+    if (!file) {
+      setError("Debes seleccionar un archivo");
+      return;
+    }
+
     setLoading(true);
     setError(null);
+
     try {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await api.post(`/kpis/by-equipo/${equipoId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await api.post(
+        `/kpis/by-equipo/${equipoId}`,
+        formData
+      );
+
       setData(res.data);
     } catch (e) {
       setError("Error cargando KPIs");

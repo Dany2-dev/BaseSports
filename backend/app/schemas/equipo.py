@@ -7,4 +7,4 @@ class EquipoOut(BaseModel):
     liga: str | None = None
 
     class Config:
-        from_attributes = True
+        orm_mode = True  # ✅ FIX

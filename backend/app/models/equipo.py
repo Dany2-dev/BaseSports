@@ -13,5 +13,5 @@ class Equipo(Base):
     jugadores = relationship(
         "Jugador",
         back_populates="equipo",
-        cascade="all, delete"
+        cascade="all, delete-orphan"  # ✅ FIX
     )

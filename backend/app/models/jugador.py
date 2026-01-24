@@ -12,6 +12,10 @@ class Jugador(Base):
     numero = Column(Integer, nullable=True)
     imagen_url = Column(String, nullable=True)
 
-    equipo_id = Column(Integer, ForeignKey("equipos.id"), nullable=False)
+    equipo_id = Column(
+        Integer,
+        ForeignKey("equipos.id", ondelete="CASCADE"),  # ✅ FIX
+        nullable=False
+    )
 
     equipo = relationship("Equipo", back_populates="jugadores")

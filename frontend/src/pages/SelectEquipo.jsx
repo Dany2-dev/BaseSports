@@ -11,7 +11,7 @@ export default function SelectEquipo() {
 
   useEffect(() => {
     api
-      .get("/equipos/")
+      .get("/equipos") // ✅ FIX 1
       .then(res => setEquipos(res.data))
       .catch(() => setEquipos([]));
   }, []);
@@ -22,17 +22,15 @@ export default function SelectEquipo() {
     image: eq.logo_url
   }));
 
-  /* ===== MENÚ LATERAL (AGREGADO, NO MODIFICA NADA) ===== */
+  /* ===== MENÚ LATERAL ===== */
   const mainMenuItems = [
-  { label: "Overview", ariaLabel: "Overview", link: "/" },
-  { label: "Teams", ariaLabel: "Teams", link: "/" },
-  { label: "Players", ariaLabel: "Players", link: "/players" },
-  { label: "Analysis", ariaLabel: "Analysis", link: "/dashboard/5" },
-  { label: "Reports", ariaLabel: "Reports", link: "/reports" },
-  { label: "Settings", ariaLabel: "Settings", link: "/settings" },
-];
-
-
+    { label: "Overview", ariaLabel: "Overview", link: "/" },
+    { label: "Teams", ariaLabel: "Teams", link: "/" },
+    { label: "Players", ariaLabel: "Players", link: "/players" },
+    { label: "Analysis", ariaLabel: "Analysis", link: "/dashboard" }, // ✅ FIX 2
+    { label: "Reports", ariaLabel: "Reports", link: "/reports" },
+    { label: "Settings", ariaLabel: "Settings", link: "/settings" },
+  ];
 
   const socialItems = [
     { label: "GitHub", link: "https://github.com/Dany2-dev" },
@@ -49,7 +47,7 @@ export default function SelectEquipo() {
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
 
-      {/* ===== MENÚ STAGGERED (IZQUIERDA, OVERLAY) ===== */}
+      {/* ===== MENÚ STAGGERED ===== */}
       <StaggeredMenu
         position="left"
         items={mainMenuItems}
@@ -61,20 +59,17 @@ export default function SelectEquipo() {
         changeMenuColorOnOpen={true}
         colors={["#B19EEF", "#5227FF"]}
         accentColor="#5227FF"
-        logoUrl="/src/assets/logos/logo-datastrike.png"
+        logoUrl="/logos/logo-datastrike.png"   
         isFixed
       />
-      {/* ============================================== */}
 
-      {/* Fondo de Seda Fijo */}
+      {/* Fondo */}
       <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
         <Silk speed={5} scale={1} color="#350085" noiseIntensity={1.4} rotation={0} />
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
       </div>
 
       <div className="relative z-10 w-full h-screen flex flex-col">
-        
-        {/* HEADER: CHOOSE YOUR TEAM */}
         <div className="w-full flex flex-col justify-center items-center pt-10 pb-6 px-4 flex-shrink-0">
           <h1 className="font-sportypo text-center leading-none text-[8vw] md:text-[6vw] drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
             <GradientText
@@ -99,7 +94,6 @@ export default function SelectEquipo() {
           </p>
         </div>
 
-        {/* CONTENEDOR CON SCROLL PARA LOS EQUIPOS */}
         <div className="flex-1 w-full overflow-y-auto no-scrollbar px-4">
           <div className="w-full max-w-5xl mx-auto py-10"> 
             {menuItems.length > 0 && (
@@ -112,7 +106,6 @@ export default function SelectEquipo() {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );

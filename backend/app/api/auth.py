@@ -41,10 +41,11 @@ async def auth_google(request: Request, db=Depends(get_db)):
         key="access_token",
         value=jwt_token,
         httponly=True,
-        samesite="lax",
-        secure=False,
+        samesite="none",   # ✅
+        secure=True,       # ✅ OBLIGATORIO en HTTPS
         path="/"
     )
+
     return response # <--- ESTO ES VITAL
 @router.get("/me")
 def me(user: User = Depends(get_current_user)):

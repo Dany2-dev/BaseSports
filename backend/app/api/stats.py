@@ -16,6 +16,7 @@ def _load_tmp_file(file: UploadFile) -> str:
         tmp.write(file.file.read())
         return tmp.name
 
+
 @router.post("/upload")
 def upload_stats(
     file: UploadFile = File(...),
@@ -26,17 +27,22 @@ def upload_stats(
         df = load_stats(path)
         merged = merge_stats_with_players(db, df)
         res = merged.fillna("").to_dict(orient="records")
-        del df 
+        del df
         return res
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
-        gc.collect() 
+        try:
+            file.file.close()          # ✅ FIX
+        except Exception:
+            pass
+        gc.collect()
         if os.path.exists(path):
             try:
                 os.remove(path)
             except:
                 pass
+
 
 @router.post("/by-equipo/{equipo_id}")
 def stats_por_equipo(
@@ -55,6 +61,10 @@ def stats_por_equipo(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
+        try:
+            file.file.close()          # ✅ FIX
+        except Exception:
+            pass
         gc.collect()
         if os.path.exists(path):
             try:
