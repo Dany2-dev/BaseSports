@@ -8,9 +8,9 @@ from starlette.middleware.sessions import SessionMiddleware
 from app.db.session import engine
 from app.db.base import Base
 from app.api.router import router
-from app.core.config import FRONTEND_URL, SECRET_KEY, ENV
+from app.core.config import FRONTEND_URL, SECRET_KEY
 
-# Importar modelos
+# Importar modelos (MUY IMPORTANTE)
 from app.models.equipo import Equipo
 from app.models.jugador import Jugador
 from app.models.user import User
@@ -18,14 +18,15 @@ from app.models.user_file import UserFile
 
 app = FastAPI(title="DataStrike API")
 
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:5173",
         "http://localhost:5173",
-        "http://192.168.56.1:5173",
-        "http://192.168.100.21:5173",
-        "http://10.10.144.127:5173",
         FRONTEND_URL,
     ],
     allow_credentials=True,
@@ -33,19 +34,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.add_middleware(
     SessionMiddleware,
     secret_key=SECRET_KEY,
     same_site="lax",
     https_only=False
 )
-
-
-if ENV == "dev":
-    @app.on_event("startup")
-    def startup():
-        Base.metadata.create_all(bind=engine)
 
 app.include_router(router)
 
