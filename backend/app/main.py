@@ -10,7 +10,7 @@ from app.db.base import Base
 from app.api.router import router
 from app.core.config import FRONTEND_URL, SECRET_KEY
 
-# Importar modelos (MUY IMPORTANTE)
+# Importar modelos (OBLIGATORIO para crear tablas)
 from app.models.equipo import Equipo
 from app.models.jugador import Jugador
 from app.models.user import User
@@ -18,10 +18,21 @@ from app.models.user_file import UserFile
 
 app = FastAPI(title="DataStrike API")
 
+# ─────────────────────────────
+# Startup: crear tablas + seed Excel
+# ─────────────────────────────
 @app.on_event("startup")
 def startup():
+    # Crear tablas
     Base.metadata.create_all(bind=engine)
 
+    # Cargar datos iniciales desde Excel (solo si DB está vacía)
+    from app.scripts.load_excel import seed_if_empty
+    seed_if_empty()
+
+# ─────────────────────────────
+# Middlewares
+# ─────────────────────────────
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -41,6 +52,9 @@ app.add_middleware(
     https_only=False
 )
 
+# ─────────────────────────────
+# Rutas
+# ─────────────────────────────
 app.include_router(router)
 
 @app.get("/")
