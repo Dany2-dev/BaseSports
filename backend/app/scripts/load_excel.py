@@ -6,12 +6,13 @@ from app.models.equipo import Equipo
 from app.models.jugador import Jugador
 
 # ─────────────────────────────
-# Rutas
+# Rutas (CORRECTAS PARA GIT + RAILWAY)
 # ─────────────────────────────
-BASE_DIR = Path(__file__).resolve().parents[3]
+BASE_DIR = Path.cwd()          # En Railway = /app
+DATA_DIR = BASE_DIR / "data"
 
-EQUIPOS_EXCEL = BASE_DIR / "data" / "Equipos.xlsx"
-JUGADORES_EXCEL = BASE_DIR / "data" / "LigaPremier.xlsx"
+EQUIPOS_EXCEL = DATA_DIR / "Equipos.xlsx"
+JUGADORES_EXCEL = DATA_DIR / "LigaPremier.xlsx"
 
 # ─────────────────────────────
 # Utilidades
@@ -73,6 +74,13 @@ def upsert_jugadores(db, df: pd.DataFrame):
 def seed_if_empty():
     db = SessionLocal()
     try:
+        print("📂 DATA_DIR:", DATA_DIR)
+        print("📄 Equipos.xlsx existe:", EQUIPOS_EXCEL.exists())
+        print("📄 LigaPremier.xlsx existe:", JUGADORES_EXCEL.exists())
+
+        if not EQUIPOS_EXCEL.exists() or not JUGADORES_EXCEL.exists():
+            raise FileNotFoundError("❌ No se encontraron los archivos Excel en /data")
+
         if db.query(Equipo).count() == 0:
             print("🌱 Base vacía, cargando datos desde Excel...")
 
