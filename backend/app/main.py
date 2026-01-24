@@ -35,11 +35,15 @@ def startup():
 # ─────────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 🔥 prueba definitiva
-    allow_credentials=False,
+    allow_origins=[
+        "https://base-sports-1168-18fax8hev-dany2-devs-projects.vercel.app",
+        "https://base-sports-1168.vercel.app",
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 app.add_middleware(
