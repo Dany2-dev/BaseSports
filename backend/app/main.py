@@ -33,16 +33,20 @@ def startup():
 # ─────────────────────────────
 # Middlewares
 # ─────────────────────────────
+from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://base-sports-1168-18fax8hev-dany2-devs-projects.vercel.app",
-        "https://base-sports-1168.vercel.app",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://datastrike.netlify.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # 🔑 SessionMiddleware CORRECTO para HTTPS + cookies
 app.add_middleware(
