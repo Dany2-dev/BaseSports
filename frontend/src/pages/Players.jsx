@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 // Cambia esto en tu frontend
-const API = "http://192.168.56.1:8000/api";
+const API = import.meta.env.VITE_API_URL;
+
 const PAGE_SIZE = 10;
 
 const normalize = (text = "") =>
