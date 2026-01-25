@@ -33,10 +33,6 @@ def startup():
 # ─────────────────────────────
 # Middlewares
 # ─────────────────────────────
-from fastapi.middleware.cors import CORSMiddleware
-
-from fastapi.middleware.cors import CORSMiddleware
-
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex=r"https://.*\.netlify\.app",
@@ -44,7 +40,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # 🔑 SessionMiddleware CORRECTO para HTTPS + cookies
 app.add_middleware(
@@ -57,6 +52,7 @@ app.add_middleware(
 # ─────────────────────────────
 # Rutas
 # ─────────────────────────────
+# El router ya tiene prefix="/api", no lo duplicamos aquí
 app.include_router(router)
 
 @app.get("/")

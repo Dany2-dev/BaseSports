@@ -6,7 +6,8 @@ from app.services.equipo_service import get_equipos, get_jugadores_por_equipo
 from app.schemas.equipo import EquipoOut
 from app.schemas.jugador import JugadorOut
 
-router = APIRouter(prefix="/equipos", tags=["Equipos"])
+# ❌ quitamos prefix aquí
+router = APIRouter(tags=["Equipos"])
 
 @router.get("/", response_model=list[EquipoOut])
 def listar_equipos(db: Session = Depends(get_db)):
