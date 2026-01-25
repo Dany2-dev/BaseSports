@@ -11,7 +11,7 @@ export default function SelectEquipo() {
 
   useEffect(() => {
     api
-      .get("/api/equipos") // ✅ FIX 1
+      api.get("/equipos")
       .then(res => setEquipos(res.data))
       .catch(() => setEquipos([]));
   }, []);

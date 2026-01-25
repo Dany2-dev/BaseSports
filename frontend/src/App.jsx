@@ -28,7 +28,7 @@ function AppLayout() {
             { label: "Inicio", ariaLabel: "Inicio", link: "/" },
             { label: "Teams", ariaLabel: "Teams", link: "/" },
             { label: "Players", ariaLabel: "Players", link: "/players" },
-            { label: "Analysis", ariaLabel: "Analysis", link: "/dashboard/5" },
+            { label: "Analysis", ariaLabel: "Analysis", link: "/" },
             { label: "Reports", ariaLabel: "Reports", link: "/reports" },
             { label: "Settings", ariaLabel: "Settings", link: "/settings" },
           ]}
