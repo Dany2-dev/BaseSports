@@ -1,18 +1,19 @@
-export async function getKpisByEquipo(equipoId) {
+export async function getKpisByEquipo(equipoId, file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
   const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/stats/by-equipo/${equipoId}`,
+    `${import.meta.env.VITE_API_URL}/kpis/by-equipo/${equipoId}`,
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", // ← importante si usas sesiones/cookies
+      body: formData,
+      credentials: "include",
     }
   );
 
   if (!res.ok) {
     console.error("Error servidor:", res.status);
-    throw new Error("Error al obtener stats del equipo");
+    throw new Error("Error al obtener KPIs del equipo");
   }
 
   return await res.json();

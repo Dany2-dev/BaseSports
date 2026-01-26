@@ -10,8 +10,7 @@ export default function SelectEquipo() {
   const [equipos, setEquipos] = useState([]);
 
   useEffect(() => {
-    api
-      api.get("/equipos")
+    api.get("/equipos/")
       .then(res => setEquipos(res.data))
       .catch(() => setEquipos([]));
   }, []);
@@ -40,7 +39,8 @@ export default function SelectEquipo() {
 
   return (
     <div className="relative min-h-screen w-full bg-black overflow-hidden">
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; background-color: black; overflow: hidden; }
         #root { width: 100%; height: 100vh; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -59,7 +59,7 @@ export default function SelectEquipo() {
         changeMenuColorOnOpen={true}
         colors={["#B19EEF", "#5227FF"]}
         accentColor="#5227FF"
-        logoUrl="/logos/logo-datastrike.png"   
+        logoUrl="/logos/logo-datastrike.png"
         isFixed
       />
 
@@ -78,7 +78,7 @@ export default function SelectEquipo() {
               showBorder={false}
               className="tracking-tighter"
             >
-              <TextType 
+              <TextType
                 text={[" SELECT", " YOUR", " TEAM"]}
                 typingSpeed={110}
                 pauseDuration={2000}
@@ -95,10 +95,10 @@ export default function SelectEquipo() {
         </div>
 
         <div className="flex-1 w-full overflow-y-auto no-scrollbar px-4">
-          <div className="w-full max-w-5xl mx-auto py-10"> 
+          <div className="w-full max-w-5xl mx-auto py-10">
             {menuItems.length > 0 && (
-              <FlowingMenu 
-                items={menuItems} 
+              <FlowingMenu
+                items={menuItems}
                 speed={20}
                 marqueeBgColor="#5227ff"
                 borderColor="rgba(255,255,255,0.1)"
