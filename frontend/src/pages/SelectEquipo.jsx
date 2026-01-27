@@ -59,7 +59,7 @@ export default function SelectEquipo() {
         changeMenuColorOnOpen={true}
         colors={["#B19EEF", "#5227FF"]}
         accentColor="#5227FF"
-        logoUrl="/logos/logo-datastrike.png"
+        logoUrl="/logo-datastrike.png"
         isFixed
       />
 
