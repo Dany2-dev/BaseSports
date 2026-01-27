@@ -24,7 +24,7 @@ const Players = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const eqRes = await fetch(`${API}/equipos`);
+        const eqRes = await fetch(`${API}/equipos/`);
         const eqData = await eqRes.json();
         setEquipos(eqData);
 
@@ -37,7 +37,7 @@ const Players = () => {
                 nombre: j.nombre,
                 posicion: j.posicion || "-",
                 equipo: e.nombre,
-                imagen_url: j.imagen_url 
+                imagen_url: j.imagen_url
               }))
             )
         );
@@ -58,7 +58,7 @@ const Players = () => {
     return players.filter(p => {
       const nombreMatch = normalize(p.nombre).includes(searchN);
       const equipoMatch = equipoFiltro === "ALL" || p.equipo === equipoFiltro;
-      const idMatch = p.id?.toString().includes(search); 
+      const idMatch = p.id?.toString().includes(search);
       return (nombreMatch || idMatch) && equipoMatch;
     });
   }, [players, search, equipoFiltro]);
@@ -75,7 +75,7 @@ const Players = () => {
   return (
     <div style={{ background: "var(--background-dark)", minHeight: "100vh", color: "var(--white)" }}>
       <div className="card-grid">
-        
+
         {/* CARD PRINCIPAL: TABLA DE JUGADORES */}
         <div className="magic-bento-card magic-bento-card--border-glow" style={{ gridColumn: "span 4", height: "auto" }}>
           <div className="magic-bento-card__header">
@@ -97,17 +97,17 @@ const Players = () => {
                 value={search}
                 onChange={e => { setSearch(e.target.value); setPage(1); }}
               />
-              <select 
+              <select
                 value={equipoFiltro}
                 onChange={e => { setEquipoFiltro(e.target.value); setPage(1); }}
                 style={{
-                    background: '#11111a', 
-                    border: '1px solid var(--border-color)', 
-                    borderRadius: '30px', 
-                    color: 'white', 
-                    padding: '0 20px',
-                    height: '50px',
-                    fontFamily: 'var(--font-mono)'
+                  background: '#11111a',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '30px',
+                  color: 'white',
+                  padding: '0 20px',
+                  height: '50px',
+                  fontFamily: 'var(--font-mono)'
                 }}
               >
                 <option value="ALL">TODOS LOS EQUIPOS</option>
@@ -116,9 +116,9 @@ const Players = () => {
             </div>
 
             {/* CONTENEDOR CON SCROLL ACTIVADO */}
-            <div style={{ 
-              overflowX: "auto", 
-              overflowY: "auto", 
+            <div style={{
+              overflowX: "auto",
+              overflowY: "auto",
               maxHeight: "500px", // Ajusta esta altura según tu necesidad
               paddingRight: "5px",
               scrollbarWidth: "thin",
@@ -148,8 +148,8 @@ const Players = () => {
                       <tr key={p.id || i}>
                         <td>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                            <img 
-                              src={p.imagen_url || "https://via.placeholder.com/40"} 
+                            <img
+                              src={p.imagen_url || "https://via.placeholder.com/40"}
                               style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--purple-primary)' }}
                               alt={p.nombre}
                             />
@@ -177,15 +177,15 @@ const Players = () => {
             </div>
 
             {/* PAGINACIÓN ADAPTADA */}
-            <div style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center', 
-                marginTop: '2rem',
-                paddingTop: '1rem',
-                borderTop: '1px solid var(--border-color)' 
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: '2rem',
+              paddingTop: '1rem',
+              borderTop: '1px solid var(--border-color)'
             }}>
-              <button 
+              <button
                 className="magic-bento-card__label"
                 style={{ cursor: 'pointer', opacity: page === 1 ? 0.3 : 1 }}
                 disabled={page === 1}
@@ -193,12 +193,12 @@ const Players = () => {
               >
                 PREV_SISTEMA
               </button>
-              
+
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>
                 DATA_PAGE: <span style={{ color: 'var(--accent-cyan)' }}>{page}</span> / {totalPages}
               </div>
 
-              <button 
+              <button
                 className="magic-bento-card__label"
                 style={{ cursor: 'pointer', opacity: page >= totalPages ? 0.3 : 1 }}
                 disabled={page >= totalPages}
