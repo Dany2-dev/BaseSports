@@ -7,7 +7,6 @@ import CombinedPassesCharts from "../charts/CombinedPassesCharts";
 import ComparativeLossesChart from "../charts/ComparativeLossesChart";
 import ProgressivePassesMagic from "../charts/ProgressivePassesMagic";
 import MagicHeatmap from "../charts/MagicHeatmap";
-import EventFilterNav from "../ui/EventFilterNav";
 import XGMagic from "../charts/XGMagic";
 import PhysicalHeatmap from "../charts/PhysicalHeatmap";
 
@@ -123,7 +122,6 @@ const MagicBento = ({ equipoId, initialData }) => {
                             <button onClick={() => setActivePeriodo("2T")}>2T</button>
                             <button onClick={() => setActivePeriodo("ALL")}>Completo</button>
                           </div>
-                          <EventFilterNav onChange={setActiveEventTypes} />
                           <MagicHeatmap
                             initialData={initialData}
                             activeEventTypes={activeEventTypes}
@@ -179,7 +177,7 @@ const MagicBento = ({ equipoId, initialData }) => {
                             overflow: "hidden"
                           }}
                         >
-                          <PhysicalHeatmap initialData={initialData} />
+                          <PhysicalHeatmap initialData={initialData} equipoId={equipoId} />
                         </div>
                       )}
                       {/* Fallback para las nuevas cards si aún no tienen un componente asignado */}

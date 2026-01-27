@@ -21,6 +21,7 @@
     "framer-motion": "^12.26.2",
     "gl-matrix": "^3.4.4",
     "gsap": "^3.14.2",
+    "heatmap.js": "^2.0.5",
     "lucide-react": "^0.562.0",
     "motion": "^12.27.1",
     "ogl": "^1.0.11",
