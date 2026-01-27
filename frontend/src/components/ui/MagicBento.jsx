@@ -22,10 +22,10 @@ const cardData = [
   { title: 'xG', description: 'Connect your favorite soccer tools', label: 'Connectivity', details: 'Expected goals.' },
   { title: 'COMPARATIVA DE RENDIMIENTO', description: 'Análisis detallado de acciones', label: 'Estadísticas', details: 'Visualización interactiva de balance.' },
   // --- NUEVAS CARDS AGREGADAS ---
-  { title: 'RECUPERACIONES', description: 'Análisis de presión y robos', label: 'Defensivo', details: 'Zonas de mayor efectividad en la recuperación.' },
+  { title: 'Comparativa entre jugadores', description: 'Análisis de presión y robos', label: 'Defensivo', details: 'Zonas de mayor efectividad en la recuperación.' },
   { title: 'DUELOS INDIVIDUALES', description: 'Éxito en 1vs1 ofensivos y defensivos', label: 'Performance', details: 'Estadísticas comparativas de duelos.' },
   { title: 'DISTRIBUCIÓN DE PASES', description: 'Dirección y longitud del juego', label: 'Análisis', details: 'Mapa de conexiones entre jugadores.' },
-  { title: 'ESTADÍSTICAS FÍSICAS', description: 'Distancia recorrida y sprints', label: 'Atletismo', details: 'Rendimiento físico de alta intensidad.' },
+  { title: 'Mapa de calor', description: 'Distancia recorrida y sprints', label: 'Atletismo', details: 'Rendimiento físico de alta intensidad.' },
   { title: 'BALÓN PARADO', description: 'Efectividad en corners y faltas', label: 'Estrategia', details: 'Análisis de jugadas de estrategia.' },
   { title: 'REPORTE FINAL', description: 'Resumen ejecutivo del encuentro', label: 'Informe', details: 'Conclusiones clave del analista.' }
 ];
@@ -170,7 +170,7 @@ const MagicBento = ({ equipoId, initialData }) => {
                           <XGMagic initialData={initialData} />
                         </div>
                       )}
-                      {card.title === "ESTADÍSTICAS FÍSICAS" && (
+                      {card.title === "Mapa de calor" && (
                         <div
                           style={{
                             marginTop: "2.5rem",
@@ -185,10 +185,10 @@ const MagicBento = ({ equipoId, initialData }) => {
                       {/* Fallback para las nuevas cards si aún no tienen un componente asignado */}
                       {!["HEATMAP", "PROGRESIVE PASS", "Balance de Ganadas y Pérdidas", "REGISTRO DE EVENTOS POR JUGADOR", "COMPARATIVA DE RENDIMIENTO", "xG"].includes(card.title) && (
                         <div className="chart-container-expanded" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
-                           <p>Contenido de {card.title} en desarrollo...</p>
+                          <p>Contenido de {card.title} en desarrollo...</p>
                         </div>
                       )}
-                      
+
                     </div>
 
                     <footer className="card-footer-expanded">
