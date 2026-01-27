@@ -9,22 +9,25 @@
   --black-pure: #000000;
   --background-dark: #030008;
   --card-bg: #070114;
-  
+
   /* Colores de Acento Deportivo */
   --purple-primary: #8400ff;
   --purple-glow: rgba(132, 0, 255, 0.25);
   --purple-border: rgba(132, 0, 255, 0.7);
   --border-color: #1a1425;
-  --accent-cyan: #00f2ff; /* Color de apoyo para métricas */
-  
+  --accent-cyan: #00f2ff;
+  /* Color de apoyo para métricas */
+
   /* Tipografía Deportiva */
-  --font-display: 'Inter', 'Oswald', sans-serif; /* Títulos fuertes */
-  --font-mono: 'JetBrains Mono', monospace; /* Para datos y tablas */
-  
+  --font-display: 'Inter', 'Oswald', sans-serif;
+  /* Títulos fuertes */
+  --font-mono: 'JetBrains Mono', monospace;
+  /* Para datos y tablas */
+
   /* Transiciones */
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --transition-main: all 0.4s var(--ease-out-expo);
-  
+
   color-scheme: dark;
 }
 
@@ -33,9 +36,9 @@
    ========================================================= */
 .card-grid {
   display: grid;
-  gap: 1.5rem;      
-  padding: 2.5rem;    
-  max-width: 1600px; 
+  gap: 1.5rem;
+  padding: 2.5rem;
+  max-width: 1600px;
   width: 100%;
   margin: 0 auto;
   grid-auto-rows: minmax(150px, auto);
@@ -59,13 +62,13 @@
   font-family: var(--font-display);
   overflow: hidden;
   transition: var(--transition-main);
-  
+
   /* Variables dinámicas Spotlight */
   --glow-x: 50%;
   --glow-y: 50%;
   --glow-intensity: 0;
   --glow-radius: 300px;
-  
+
   isolation: isolate;
   cursor: pointer;
 }
@@ -73,8 +76,8 @@
 .magic-bento-card:hover {
   transform: translateY(-8px) scale(1.01);
   border-color: var(--purple-border);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 
-              0 0 20px rgba(132, 0, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(132, 0, 255, 0.1);
 }
 
 /* ===============================
@@ -84,7 +87,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 1; 
+  z-index: 1;
   overflow: hidden;
   opacity: 0.6;
 }
@@ -97,7 +100,8 @@
   display: flex;
   position: relative;
   color: var(--white);
-  z-index: 10; /* Encima de partículas y glow */
+  z-index: 10;
+  /* Encima de partículas y glow */
 }
 
 .magic-bento-card__header {
@@ -124,6 +128,7 @@
   border-radius: 20px;
   border: 1px solid rgba(132, 0, 255, 0.2);
 }
+
 .magic-bento-card__title {
   font-size: 2.2rem;
   font-weight: 800;
@@ -160,6 +165,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 /* =========================================================
    5. RESPONSIVE DESIGN & GRID LOGIC (CORREGIDO)
    ========================================================= */
@@ -247,7 +253,8 @@
     grid-column: 1 / span 2;
     grid-row: 2 / span 2;
   }
-/* Segunda fila de destacados (Cards 9 y 10) 
+
+  /* Segunda fila de destacados (Cards 9 y 10) 
      Esto hace que el patrón se repita visualmente abajo */
   .magic-bento-card:nth-child(9) {
     grid-column: span 2;
@@ -256,9 +263,11 @@
 
   .magic-bento-card:nth-child(10) {
     grid-column: 1 / span 2;
-    grid-row: 4 / span 2; /* Se ajusta a la nueva fila */
+    grid-row: 4 / span 2;
+    /* Se ajusta a la nueva fila */
   }
 }
+
 /* =========================================================
    6. EFECTOS DE BRILLO (GLOW & BORDER)
    ========================================================= */
@@ -266,13 +275,11 @@
   content: '';
   position: absolute;
   inset: -1px;
-  padding: 1.5px; 
-  background: radial-gradient(
-    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-    rgba(132, 0, 255, calc(var(--glow-intensity) * 0.9)) 0%,
-    rgba(132, 0, 255, calc(var(--glow-intensity) * 0.3)) 40%,
-    transparent 70%
-  );
+  padding: 1.5px;
+  background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+      rgba(132, 0, 255, calc(var(--glow-intensity) * 0.9)) 0%,
+      rgba(132, 0, 255, calc(var(--glow-intensity) * 0.3)) 40%,
+      transparent 70%);
   border-radius: inherit;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -288,11 +295,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-    rgba(132, 0, 255, 0.05),
-    transparent 60%
-  );
+  background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+      rgba(132, 0, 255, 0.05),
+      transparent 60%);
   z-index: 2;
   pointer-events: none;
 }
@@ -312,8 +317,17 @@
 }
 
 @keyframes particleFloat {
-  0%, 100% { transform: translate(0, 0); opacity: 0.2; }
-  50% { transform: translate(20px, -40px); opacity: 0.8; }
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: translate(20px, -40px);
+    opacity: 0.8;
+  }
 }
 
 /* =========================================================
@@ -322,13 +336,14 @@
 .bento-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(2, 0, 8, 0.8) !important; /* Un poco menos de opacidad ayuda */
+  background: rgba(2, 0, 8, 0.8) !important;
+  /* Un poco menos de opacidad ayuda */
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
-  
+
   /* CAMBIO CRÍTICO AQUÍ: */
-  z-index: 1000 !important; 
-  
+  z-index: 1000 !important;
+
   pointer-events: all;
   opacity: 0;
   animation: fadeIn 0.4s ease forwards;
@@ -339,36 +354,43 @@
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  
+
   /* Dimensiones controladas */
   width: 95vw !important;
-  height: 90vh !important; 
-  max-height: 90vh !important; /* Evita que crezca más que la pantalla */
-  
+  height: 90vh !important;
+  max-height: 90vh !important;
+  /* Evita que crezca más que la pantalla */
+
   /* Control de Scroll */
-  overflow-y: auto !important; 
+  overflow-y: auto !important;
   overflow-x: hidden !important;
-  
+
   /* Layout interno */
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important; /* Alinea al inicio para permitir scroll */
-  
+  justify-content: flex-start !important;
+  /* Alinea al inicio para permitir scroll */
+
   padding: 4rem 3rem !important;
   z-index: 2000 !important;
-  
+
   /* Suavizado de scroll para móviles */
   -webkit-overflow-scrolling: touch;
 }
+
 .magic-bento-card__extended-info {
   position: relative;
   width: 100%;
-  flex-shrink: 0; /* Evita que el contenedor se colapse */
-  min-height: min-content; 
-  display: block; /* Cambiamos a block para que el flujo vertical sea natural */
+  flex-shrink: 0;
+  /* Evita que el contenedor se colapse */
+  min-height: min-content;
+  display: block;
+  /* Cambiamos a block para que el flujo vertical sea natural */
   margin-top: 2rem;
-  padding-bottom: 5rem; /* Espacio extra al final para que no choque con el borde */
+  padding-bottom: 5rem;
+  /* Espacio extra al final para que no choque con el borde */
 }
+
 .magic-bento-card__close {
   position: absolute;
   top: 2rem;
@@ -444,7 +466,7 @@ td {
   padding: 1.2rem;
   background: rgba(255, 255, 255, 0.02);
   font-family: var(--font-display);
-  border-top: 1px solid rgba(255,255,255,0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 tr:hover td {
@@ -453,7 +475,8 @@ tr:hover td {
 }
 
 /* HEATMAP & CHARTS */
-.magic-heatmap-container, .chart-wrapper-fixed {
+.magic-heatmap-container,
+.chart-wrapper-fixed {
   width: 100%;
   background: #050508;
   border-radius: 20px;
@@ -462,7 +485,10 @@ tr:hover td {
   overflow: hidden;
 }
 
-.chart-wrapper-fixed { min-height: 500px; padding: 2rem; }
+.chart-wrapper-fixed {
+  min-height: 500px;
+  padding: 2rem;
+}
 
 /* MINI PREVIEW BARS */
 .bento-card__preview {
@@ -482,8 +508,17 @@ tr:hover td {
 }
 
 @keyframes barGrow {
-  0%, 100% { height: 20%; opacity: 0.3; }
-  50% { height: 70%; opacity: 0.9; }
+
+  0%,
+  100% {
+    height: 20%;
+    opacity: 0.3;
+  }
+
+  50% {
+    height: 70%;
+    opacity: 0.9;
+  }
 }
 
 /* =========================================================
@@ -491,13 +526,15 @@ tr:hover td {
    ========================================================= */
 /* Estilo de la barra de scroll para la ventana expandida */
 .magic-bento-card.is-expanded::-webkit-scrollbar {
-  width: 6px; /* Muy delgada */
+  width: 6px;
+  /* Muy delgada */
 }
 
 .magic-bento-card.is-expanded::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 10px;
-  margin: 20px; /* Separa la barra de los bordes superior e inferior */
+  margin: 20px;
+  /* Separa la barra de los bordes superior e inferior */
 }
 
 .magic-bento-card.is-expanded::-webkit-scrollbar-thumb {
@@ -509,6 +546,7 @@ tr:hover td {
 .magic-bento-card.is-expanded::-webkit-scrollbar-thumb:hover {
   background: var(--purple-primary);
 }
+
 .separator {
   height: 1px;
   width: 100%;
@@ -532,6 +570,7 @@ tr:hover td {
   mix-blend-mode: plus-lighter;
   z-index: 9999;
   filter: blur(80px);
-  background: radial-gradient(circle, rgba(132,0,255,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(132, 0, 255, 0.15) 0%, transparent 70%);
 }
+
 /* Fin del Sistema de Estilos 600+ líneas logic */
