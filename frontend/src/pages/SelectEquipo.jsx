@@ -32,7 +32,7 @@ export default function SelectEquipo() {
   ];
 
   const socialItems = [
-    { label: "GitHub", link: "https://github.com/Dany2-dev" },
+    { label: "GitHub", link: "https://github.com" },
     { label: "LinkedIn", link: "https://linkedin.com" }
   ];
   /* ==================================================== */
