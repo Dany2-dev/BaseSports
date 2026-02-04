@@ -46,6 +46,9 @@ def load_equipos(db, df: pd.DataFrame):
 # Upsert de jugadores
 # ─────────────────────────────
 def upsert_jugadores(db, df: pd.DataFrame):
+    # Evitar duplicados que causen error de integridad
+    df = df.drop_duplicates(subset=["id_jugador"])
+
     for _, row in df.iterrows():
         jugador_id = int(row["id_jugador"])
 
